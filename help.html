@@ -1,40 +1,22 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Anonymous Help</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
   <script type="module" src="chat.js" defer></script>
 </head>
 <body>
-    <nav>
-        <a href="index.html">Home</a> |
-        <a href="quiz.html">Self-Check Quiz</a> |
-        <a href="help.html">Get Help</a>
-      </nav>
-      
+  <nav>
+    <a href="index.html">Home</a> |
+    <a href="quiz.html">Self-Check Quiz</a> |
+    <a href="help.html">Get Help</a>
+  </nav>
+
   <h2>Anonymous Chat</h2>
   <div id="chat-box" style="border:1px solid #ccc; height:300px; overflow-y:scroll; padding:10px;"></div>
-  <input type="text" id="message" placeholder="Type your message...">
+  <input type="text" id="message" placeholder="Type your message..." />
   <button id="send">Send</button>
-
-  <!-- Firebase SDK -->
-  <script type="module">
-    // Replace the below with your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyCSZaEt4DD_TaXQ3nKe7XCLEIV8MOJ4Mug",
-     authDomain: "depressionchat-23bea.firebaseapp.com",
-     projectId: "depressionchat-23bea",
-     storageBucket: "depressionchat-23bea.appspot.com",
-     messagingSenderId: "225588915918",
-     appId: "1:225588915918:web:211f0be3781d937aad2a9f"
-    };
-    export { firebaseConfig };
-  </script>
-  <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
-<script src="chat.js"></script>
-<script type="module" src="chat.js"></script>
-
 </body>
 </html>

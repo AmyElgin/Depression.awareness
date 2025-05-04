@@ -21,7 +21,9 @@ const auth = getAuth(app);
 // ✅ Sign in anonymously
 signInAnonymously(auth)
   .then(() => console.log("Signed in anonymously"))
-  .catch(console.error);
+  .catch((error) => {
+    console.error("Anonymous sign-in error:", error);
+  });
 
 // ✅ Get references to DOM
 const chatBox = document.getElementById("chat-box");
@@ -32,19 +34,23 @@ const sendBtn = document.getElementById("send");
 sendBtn.addEventListener("click", async () => {
   const text = messageInput.value.trim();
   if (text) {
-    await addDoc(collection(db, "messages"), {
-      text,
-      timestamp: serverTimestamp()
-    });
-    messageInput.value = "";
+    try {
+      await addDoc(collection(db, "messages"), {
+        text,
+        timestamp: serverTimestamp()
+      });
+      messageInput.value = "";
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   }
 });
 
 // ✅ Load messages in real time
 const q = query(collection(db, "messages"), orderBy("timestamp"));
-onSnapshot(q, snapshot => {
+onSnapshot(q, (snapshot) => {
   chatBox.innerHTML = "";
-  snapshot.forEach(doc => {
+  snapshot.forEach((doc) => {
     const msg = document.createElement("p");
     msg.textContent = doc.data().text;
     chatBox.appendChild(msg);
