@@ -1,11 +1,14 @@
-// Firebase SDK v10.12
+// 1) Firebase SDK imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore, collection, addDoc, serverTimestamp,
+  onSnapshot, query, orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// ✅ Firebase configuration
+// 2) Your Firebase config
 const firebaseConfig = {
-  apiKey: "AIzaSyCSZaEt4DD_TaXQ3nKe7XCLEIV8MOJ4Mug",
+  apiKey: "...",
   authDomain: "depressionchat-23bea.firebaseapp.com",
   projectId: "depressionchat-23bea",
   storageBucket: "depressionchat-23bea.appspot.com",
@@ -13,47 +16,65 @@ const firebaseConfig = {
   appId: "1:225588915918:web:211f0be3781d937aad2a9f"
 };
 
-// ✅ Initialize Firebase services
+// 3) Initialize
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-// ✅ Sign in anonymously
-signInAnonymously(auth)
-  .then(() => console.log("Signed in anonymously"))
-  .catch((error) => {
-    console.error("Anonymous sign-in error:", error);
-  });
+// 4) Sign in anonymously
+await signInAnonymously(auth).catch(console.error);
 
-// ✅ Get references to DOM
+// 5) Admin UID (fixed—you) and current user UID
+const ADMIN_UID = "ADMIN_USER_UID";         // pick a constant for your admin account
+const currentUser = auth.currentUser || await new Promise(res =>
+  auth.onAuthStateChanged(u => res(u))
+);
+
+// 6) Generate a consistent conversation ID between two UIDs
+function genConversationId(a, b) {
+  return [a, b].sort().join("_");
+}
+
+// 7) Determine chat participants
+const userA = currentUser.uid;
+const userB = ADMIN_UID;
+const conversationId = genConversationId(userA, userB);
+
+// 8) DOM refs
 const chatBox = document.getElementById("chat-box");
 const messageInput = document.getElementById("message");
 const sendBtn = document.getElementById("send");
 
-// ✅ Send message
+// 9) Send a message into conversations/{conversationId}/messages
 sendBtn.addEventListener("click", async () => {
   const text = messageInput.value.trim();
-  if (text) {
-    try {
-      await addDoc(collection(db, "messages"), {
-        text,
-        timestamp: serverTimestamp()
-      });
-      messageInput.value = "";
-    } catch (error) {
-      console.error("Error sending message:", error);
+  if (!text) return;
+
+  await addDoc(
+    collection(db, "conversations", conversationId, "messages"),
+    {
+      sender: userA,
+      text,
+      timestamp: serverTimestamp()
     }
-  }
+  );
+  messageInput.value = "";
 });
 
-// ✅ Load messages in real time
-const q = query(collection(db, "messages"), orderBy("timestamp"));
-onSnapshot(q, (snapshot) => {
+// 10) Listen to messages for this conversation
+const messagesQuery = query(
+  collection(db, "conversations", conversationId, "messages"),
+  orderBy("timestamp")
+);
+
+onSnapshot(messagesQuery, snapshot => {
   chatBox.innerHTML = "";
-  snapshot.forEach((doc) => {
-    const msg = document.createElement("p");
-    msg.textContent = doc.data().text;
-    chatBox.appendChild(msg);
+  snapshot.forEach(doc => {
+    const { sender, text } = doc.data();
+    const p = document.createElement("p");
+    p.textContent = text;
+    p.className = sender === userA ? "message user" : "message admin";
+    chatBox.appendChild(p);
   });
   chatBox.scrollTop = chatBox.scrollHeight;
 });
