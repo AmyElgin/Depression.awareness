@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Depression Quiz</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header>
+    <h1>Check Your Mental Health</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="chat.html">Get Help</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="quiz-form" class="intro">
+      <h2>Answer honestly:</h2>
+
+      <label>1. Have you felt sad or hopeless in the past two weeks?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>2. Do you feel tired even after sleeping?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>3. Have you lost interest in activities you used to enjoy?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>4. Do you struggle to concentrate?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>5. Have you felt like you're a burden to others?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>6. Do you experience sudden mood changes?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>7. Have you been avoiding friends or social activities?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>8. Are you struggling with your self-esteem?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>9. Have you experienced changes in appetite or weight?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <label>10. Do you find it difficult to get out of bed in the morning?<br>
+        <select>
+          <option>Never</option>
+          <option>Sometimes</option>
+          <option>Often</option>
+          <option>Almost Always</option>
+        </select>
+      </label><br><br>
+
+      <button type="submit" class="btn">See Result</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Depression Awareness Project</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById("quiz-form");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const answers = form.querySelectorAll("select");
+      let score = 0;
+
+      answers.forEach(select => {
+        const value = select.value;
+        if (value === "Sometimes") score += 1;
+        else if (value === "Often") score += 2;
+        else if (value === "Almost Always") score += 3;
+      });
+
+      if (score >= 15) {
+        alert("You may be showing signs of depression. Redirecting to help...");
+        window.location.href = "chat.html";
+      } else {
+        alert("You're likely okay, but always reach out if you need to.");
+      }
+    });
+  </script>
+</body>
+</html>
